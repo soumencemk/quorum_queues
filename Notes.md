@@ -30,7 +30,7 @@
     - Written to a quorum (majority) of nodes
     - NB:fsync! (flushed to underlying disk)
 
-### 2. Log Truncation
+## 2. Log Truncation
 
 - Without it the log would grow and exhaust the disk
 - The current state can be snapshotted and put on disk instead of prefix of log entries
@@ -41,7 +41,7 @@
     - How can we snapshot without (re)writing message bodies to disk?
     - Quorum queues are FIFO(ish) queues
 
-### 3. Potential problems
+## 3. Potential problems
 
 - Consumers that continuously rejects messages
     - violating FIFO properties
