@@ -18,11 +18,12 @@
 
 * **Synchronization is blocking**  causing the whole queue to become unavailable. When a queue is large, the impact is
   much greater. Synchronization has been known to cause memory related issues on the cluster sometimes even causing
-  synchronization to get stuck requiring reboot.
+  synchronization to get stuck requiring reboot. During the sync, the queue is unavailable. No new messages are
+  processed or accepted until the sync is complete.
 
 ## 2. Quorum Queues
 
-- **The issues of synchronization are gone**. When brokers come back online, they do not discard their data. All messages
-  remain on disk, and the leader simply replicates messages from where it left off.
-- **Replication of messages to a returning follower is non-blocking**. So queues do not get so impacted by new followers or
-  rejoining followers. The only impact can be network utilization.
+- **The issues of synchronization are gone**. When brokers come back online, they do not discard their data. All
+  messages remain on disk, and the leader simply replicates messages from where it left off.
+- **Replication of messages to a returning follower is non-blocking**. So queues do not get so impacted by new followers
+  or rejoining followers. The only impact can be network utilization.
