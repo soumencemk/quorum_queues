@@ -77,6 +77,23 @@ cease until messages get consumed and removed from memory. This is why when usin
 Limit policies are applied. 
 
 
+## Some points
+- Theres maximum 5 replicas, for example a cluster of three nodes will have three replicas, one on each node. In a cluster of seven nodes, five nodes will have one replica each but two nodes won't host any replicas.
+- Can support any exchange type, just like the classic queues
+- Client consumption operations works the same way as the classic queues
+- The recommended number of replicas for a quorum queue is the quorum ((N/2)+1 where N is the total number of system participants) of cluster nodes (but no fewer than three).
+- Quorum queues cann't be non-durable, they always writes to disk.
+- Quorum queues store their content on disk (per Raft requirements) as well as in memory (up to the in memory limit configured).
+- Quorum queues do not currently support priorities, including consumer priorities.
+- Quorum queues support poison message handling via a redelivery limit
+- All queue operations go through the leader first and then are replicated to followers (mirrors). This is necessary to guarantee FIFO ordering of messages.
 
+
+### Leader election and failure handling
+When a RabbitMQ node hosting a quorum queue's leader fails or is stopped another node hosting one of that quorum queue's follower will be elected leader and resume operations. Failed and rejoining followers will re-synchronise ("catch up") with the leader. In contrast to classic mirrored queues, a temporary replica failure does not require a full re-synchronization from the currently elected leader. Only the delta will be transferred if a re-joining replica is behind the leader.
+> RabbitMQ clusters with fewer than three nodes do not benefit fully from the quorum queue guarantees
+> RabbitMQ clusters with an even number of RabbitMQ nodes do not benefit from having quorum queue members spread over all nodes
+> Performance tails off quite a bit for quorum queue node sizes larger than 5. We do not recommend running quorum queues on more than 7 RabbitMQ nodes.
+> Due to the disk I/O-heavy nature of quorum queues, their throughput decreases as message sizes increase.
 
 
