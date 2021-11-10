@@ -87,13 +87,14 @@ Limit policies are applied.
 - Quorum queues do not currently support priorities, including consumer priorities.
 - Quorum queues support poison message handling via a redelivery limit
 - All queue operations go through the leader first and then are replicated to followers (mirrors). This is necessary to guarantee FIFO ordering of messages.
+- RabbitMQ clusters with fewer than three nodes do not benefit fully from the quorum queue guarantees
+- RabbitMQ clusters with an even number of RabbitMQ nodes do not benefit from having quorum queue members spread over all nodes
+- Performance tails off quite a bit for quorum queue node sizes larger than 5. We do not recommend running quorum queues on more than 7 RabbitMQ nodes.
+- Due to the disk I/O-heavy nature of quorum queues, their throughput decreases as message sizes increase.
+
 
 
 ### Leader election and failure handling
 When a RabbitMQ node hosting a quorum queue's leader fails or is stopped another node hosting one of that quorum queue's follower will be elected leader and resume operations. Failed and rejoining followers will re-synchronise ("catch up") with the leader. In contrast to classic mirrored queues, a temporary replica failure does not require a full re-synchronization from the currently elected leader. Only the delta will be transferred if a re-joining replica is behind the leader.
-> RabbitMQ clusters with fewer than three nodes do not benefit fully from the quorum queue guarantees
-> RabbitMQ clusters with an even number of RabbitMQ nodes do not benefit from having quorum queue members spread over all nodes
-> Performance tails off quite a bit for quorum queue node sizes larger than 5. We do not recommend running quorum queues on more than 7 RabbitMQ nodes.
-> Due to the disk I/O-heavy nature of quorum queues, their throughput decreases as message sizes increase.
 
 
