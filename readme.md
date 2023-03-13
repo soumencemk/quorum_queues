@@ -1,3 +1,4 @@
+[Whats Wrong with Mirrored Queues ?](WhatsWrongWithMirroredQueues.md)
 # Quorum Queues Internals - RabbitMQ
 
 - New Replicated queue type in `RabbitMQ 3.8`
